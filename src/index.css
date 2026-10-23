@@ -281,3 +281,348 @@ body {
 .transaction-form button:hover {
   background-color: var(--crimson-bright);
 }
+
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transaction-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.transaction-category {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.transaction-amount {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.nav-title {
+  display: block;
+  font-weight: 600;
+}
+
+.nav-description {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.nav-link {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  background: #493039;
+}
+
+.nav-link.active {
+  background: #62313d;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--crimson-bright);
+  outline-offset: 2px;
+}
+
+
+/* THE RULES - MONTHLY BUDGETS */
+
+.budget-list {
+  margin-top: 32px;
+}
+
+.budget-list h2 {
+  margin-bottom: 20px;
+  color: #f1e9e9;
+}
+
+.budget-item {
+  background: #191619;
+  border: 1px solid #35262c;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.budget-item h3 {
+  color: #f1e9e9;
+  margin: 0 0 16px;
+  font-size: 18px;
+}
+
+.budget-item p {
+  color: #b5a8ad;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.budget-progress {
+  width: 100%;
+  height: 10px;
+  background: #30262b;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.budget-progress-fill {
+  height: 100%;
+  background: #a82938;
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.budget-item .budget-percentage {
+  margin-top: 10px;
+  color: #d6b4bd;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* FINAL CUT - BLOOD RED SURVIVAL STATES */
+
+.budget-progress.safe .budget-progress-fill {
+  background: #6e1018;
+}
+
+.budget-progress.warning .budget-progress-fill {
+  background: #a4161a;
+}
+
+.budget-progress.danger .budget-progress-fill {
+  background: #d00000;
+}
+
+/* FINAL CUT - BLOOD RED SURVIVAL STATES */
+
+.budget-progress.safe .budget-progress-fill {
+  background: #6e1018;
+}
+
+.budget-progress.warning .budget-progress-fill {
+  background: #a4161a;
+}
+
+.budget-progress.danger .budget-progress-fill {
+  background: #d00000;
+}
+
+/* FINAL CUT - SURVIVAL MESSAGES */
+
+.budget-item .budget-message {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.budget-item .budget-message.safe {
+  color: #b5a8ad;
+}
+
+.budget-item .budget-message.warning {
+  color: #e0a0a0;
+}
+
+.budget-item .budget-message.danger {
+  color: #ff5555;
+  letter-spacing: 1px;
+}
+
+
+/* FINAL CUT - BUDGET FORM */
+
+.budget-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 24px;
+  background: #191619;
+  border: 1px solid #35262c;
+  border-radius: 12px;
+}
+
+.budget-form h2 {
+  color: #f1e9e9;
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+
+.budget-form label {
+  color: #b5a8ad;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.budget-form select,
+.budget-form input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #101012;
+  color: #f1e9e9;
+  border: 1px solid #493039;
+  border-radius: 8px;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.budget-form select:focus,
+.budget-form input:focus {
+  outline: 2px solid #a4161a;
+  outline-offset: 2px;
+}
+
+.budget-form button {
+  margin-top: 12px;
+  padding: 13px 18px;
+  background: #a4161a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.budget-form button:hover {
+  background: #c21d23;
+}
+
+.budget-form button:focus-visible {
+  outline: 2px solid #f1e9e9;
+  outline-offset: 3px;
+}
+
+
+/* FINAL CUT - MONTHLY SURVIVAL REPORT */
+
+.survival-report {
+  margin-top: 32px;
+  padding: 24px;
+  background: #191619;
+  border: 1px solid #35262c;
+  border-radius: 12px;
+}
+
+.survival-report h2 {
+  margin: 0 0 8px;
+  color: #f1e9e9;
+  font-size: 22px;
+}
+
+.survival-report > p {
+  margin: 0;
+  color: #b5a8ad;
+  font-size: 14px;
+}
+
+.survival-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.survival-stat {
+  padding: 20px;
+  background: #101012;
+  border: 1px solid #35262c;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.survival-stat h3 {
+  margin: 0 0 8px;
+  color: #f1e9e9;
+  font-size: 32px;
+}
+
+.survival-stat p {
+  margin: 0;
+  color: #b5a8ad;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.survival-stat.safe {
+  border-color: #6e1018;
+}
+
+.survival-stat.warning {
+  border-color: #a4161a;
+}
+
+.survival-stat.danger {
+  border-color: #d00000;
+}
+
+@media (max-width: 600px) {
+  .survival-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.month-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.month-navigation h3 {
+  margin: 0;
+  min-width: 180px;
+  text-align: center;
+}
+
+.month-navigation button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  background-color: #6e1018;
+  color: #ffffff;
+  border: 1px solid #a4161a;
+  border-radius: 8px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.month-navigation button:hover:not(:disabled) {
+  background-color: #a4161a;
+}
+
+.month-navigation button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.survival-empty-message {
+  color: #a8a0a3;
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 12px;
+}

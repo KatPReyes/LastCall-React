@@ -1,20 +1,28 @@
 import { useState } from 'react';
-function TransactionForm({ onAddTransaction }) {
+function TransactionForm({ onAddTransaction, categories }) {
     const [name, setName] = useState('');
     const [amount, setAmount] = useState('');
+    const [category, setCategory] = useState('');
 
 function handleSubmit(event) {
   event.preventDefault();
 
-  if (name.trim() === '' || amount === '' || !Number.isFinite(Number(amount)) || Number(amount) <= 0) {
-    alert('Please enter a valid expense name and amount.');
+  if (
+  name.trim() === '' ||
+  amount === '' ||
+  !Number.isFinite(Number(amount)) ||
+  Number(amount) <= 0 ||
+  category === ''
+) {
+    alert('Please enter a valid expense name, amount and category.');
     return;
   }
 
-  onAddTransaction(name.trim(), amount);
+  onAddTransaction(name.trim(), amount, category);
 
   setName('');
   setAmount('');
+  setCategory('');
 }
 
   return (
@@ -47,6 +55,23 @@ function handleSubmit(event) {
           value={amount}
           onChange={(event) => setAmount(event.target.value)}
         />
+        <label htmlFor="transaction-category">
+          Category
+        </label>
+
+<select
+  id="transaction-category"
+  value={category}
+  onChange={(event) => setCategory(event.target.value)}
+>
+  <option value="">Select a category</option>
+
+  {categories.map((categoryOption) => (
+    <option key={categoryOption} value={categoryOption}>
+      {categoryOption}
+    </option>
+  ))}
+</select>
 
         <button type="submit">
           Add Expense

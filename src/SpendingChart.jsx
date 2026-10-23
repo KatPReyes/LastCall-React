@@ -10,7 +10,19 @@ function SpendingChart({ transactions, totalSpending, onDeleteTransaction }) {
         {transactions.map(function(transaction) {
   return (
     <li key={transaction.id} className="transaction-item">
-      {transaction.name} - ${transaction.amount.toFixed(2)}
+  <div className="transaction-details">
+    <span className="transaction-name">
+      {transaction.name}
+    </span>
+
+    <span className="transaction-category">
+      {transaction.category || 'Uncategorized'}
+    </span>
+  </div>
+
+  <span className="transaction-amount">
+    ${transaction.amount.toFixed(2)}
+  </span>
 
       <button
         type="button"
