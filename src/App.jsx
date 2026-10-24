@@ -453,25 +453,25 @@ function App() {
 
             <div className="dashboard-grid">
               <DashboardCard
-                title="Incoming Calls"
+                title="The Supply Drop"
                 description="Total Income"
                 amount={`$${income.toFixed(2)}`}
               />
 
               <DashboardCard
-                title="Casualties"
+                title="The Damage"
                 description="Total Expenses"
                 amount={`$${totalExpenses.toFixed(2)}`}
               />
 
               <DashboardCard
-                title="The Final Count"
+                title="The Lifeline"
                 description="Remaining Balance"
                 amount={`$${remainingBalance.toFixed(2)}`}
               />
 
               <DashboardCard
-                title="Survival Fund Goal"
+                title="The Escape Plan"
                 description="Savings Target"
                 amount={`$${savingsGoal.toFixed(2)}`}
               />

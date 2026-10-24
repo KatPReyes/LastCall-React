@@ -1,10 +1,10 @@
 function Greeting() {
-    return (
-        <div>
-            <h1>Hello, Sidney</h1>
-            <p>What's your favorite unnecessary purchase?</p>
-        </div>
-    );
+  return (
+    <div>
+      <h1>The rules are simple.</h1>
+      <p>Survive the month.</p>
+    </div>
+  );
 }
 
 export default Greeting;

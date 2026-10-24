@@ -17,7 +17,7 @@ function SavingsForm({ onSetGoal }) {
 
   return (
     <section className="savings-form">
-      <h2>Set Your Survival Goal</h2>
+      <h2>Plan Your Escape</h2>
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="savings-goal">
