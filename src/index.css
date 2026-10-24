@@ -701,3 +701,199 @@ body {
   border-radius: 10px;
   transition: width 0.3s ease;
 }
+
+
+.spending-report {
+  margin: 24px 0 32px;
+  padding: 24px;
+  background: #1e1e1e;
+  border: 1px solid #393939;
+  border-radius: 12px;
+}
+
+.spending-report h3 {
+  margin: 0 0 20px;
+}
+
+
+.spending-report-row {
+  padding: 14px 0;
+  border-bottom: 1px solid #333;
+}
+
+.spending-report-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.spending-report-row:last-child {
+  border-bottom: none;
+}
+
+.spending-report-info span:last-child {
+  font-weight: 600;
+}
+
+.spending-bar {
+  width: 100%;
+  height: 8px;
+  background: #333;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.spending-bar-fill {
+  height: 100%;
+  background: #a4161a;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.spending-report-row:last-child {
+  border-bottom: none;
+}
+
+.spending-report-row span:last-child {
+  font-weight: 600;
+}
+
+
+.spending-total {
+  margin: 0 0 20px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.spending-total strong {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+
+.spending-trends {
+  margin: 24px 0 32px;
+  padding: 24px;
+  background: #1e1e1e;
+  border: 1px solid #393939;
+  border-radius: 12px;
+}
+
+.spending-trends h3 {
+  margin: 0 0 8px;
+}
+
+.spending-trends p {
+  color: #aaa;
+  margin: 0 0 24px;
+}
+
+.trends-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  height: 220px;
+}
+
+.trend-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.trend-bar-area {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.trend-bar {
+  width: 100%;
+  background: #a4161a;
+  border-radius: 6px 6px 0 0;
+  transition: height 0.3s ease;
+}
+
+.trend-month {
+  font-size: 12px;
+  color: #aaa;
+}
+
+
+.trend-amount {
+  color: #ddd;
+  font-size: clamp(10px, 1.5vw, 12px);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+
+@media (max-width: 600px) {
+  .spending-trends {
+    padding: 16px;
+  }
+
+  .trends-chart {
+    gap: 6px;
+  }
+
+  .trend-month {
+    font-size: 10px;
+  }
+
+  .trend-amount {
+    font-size: 10px;
+  }
+}
+
+
+.spending-comparison {
+  margin: 24px 0;
+  padding: 24px;
+  background: #1e1e1e;
+  border: 1px solid #393939;
+  border-radius: 12px;
+}
+
+.spending-comparison h3 {
+  margin: 0 0 12px;
+}
+
+.spending-increase {
+  color: #e05252;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.spending-decrease {
+  color: #67b87a;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.spending-unchanged {
+  color: #aaa;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.comparison-details {
+  color: #aaa;
+  font-size: 13px;
+  margin: 0;
+}

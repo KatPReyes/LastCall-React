@@ -128,6 +128,8 @@ function App() {
 
   const [selectedMonth, setSelectedMonth] = useState(() => getMonthKey());
 
+  const [revealMonth, setRevealMonth] = useState(() => getMonthKey());
+
   const [budgetHistory, setBudgetHistory] = useState(() => {
     const savedHistory = localStorage.getItem("budgetHistory");
     return savedHistory ? JSON.parse(savedHistory) : {};
@@ -139,6 +141,74 @@ function App() {
   });
 
   const displayedBudgets = budgetHistory[selectedMonth] || {};
+
+  const spendingByCategory = transactions
+    .filter(
+      (transaction) =>
+        (transaction.type ?? "expense") === "expense" &&
+        typeof transaction.date === "string" &&
+        transaction.date.slice(0, 7) === revealMonth,
+    )
+    .reduce((totals, transaction) => {
+      const category = transaction.category;
+      const amount = Number(transaction.amount);
+
+      if (!category || !Number.isFinite(amount) || amount <= 0) {
+        return totals;
+      }
+
+      totals[category] = (totals[category] || 0) + amount;
+
+      return totals;
+    }, {});
+
+  const totalMonthlySpending = Object.values(spendingByCategory).reduce(
+    (total, amount) => total + amount,
+    0,
+  );
+
+  const monthlySpendingTrends = Array.from({ length: 6 }, (_, index) => {
+    const [year, month] = revealMonth.split("-").map(Number);
+    const date = new Date(year, month - 1 - (5 - index), 1);
+    const monthKey = getMonthKey(date);
+
+    const total = transactions
+      .filter(
+        (transaction) =>
+          (transaction.type ?? "expense") === "expense" &&
+          typeof transaction.date === "string" &&
+          transaction.date.slice(0, 7) === monthKey,
+      )
+      .reduce((sum, transaction) => {
+        const amount = Number(transaction.amount);
+        return sum + (Number.isFinite(amount) && amount > 0 ? amount : 0);
+      }, 0);
+
+    return {
+      month: monthKey,
+      label: date.toLocaleDateString("en-US", { month: "short" }),
+      total,
+    };
+  });
+
+  const currentTrendMonth = monthlySpendingTrends[5];
+  const previousTrendMonth = monthlySpendingTrends[4];
+
+  const spendingDifference = currentTrendMonth.total - previousTrendMonth.total;
+
+  const previousMonthHasExpenses = transactions.some(
+    (transaction) =>
+      (transaction.type ?? "expense") === "expense" &&
+      typeof transaction.date === "string" &&
+      transaction.date.slice(0, 7) === previousTrendMonth.month,
+  );
+
+  const currentMonthHasExpenses = transactions.some(
+    (transaction) =>
+      (transaction.type ?? "expense") === "expense" &&
+      typeof transaction.date === "string" &&
+      transaction.date.slice(0, 7) === currentTrendMonth.month,
+  );
 
   // Saves the transaction list to localStorage whenever transactions change
   useEffect(() => {
@@ -564,8 +634,170 @@ function App() {
             <h1>The Reveal</h1>
             <p>Every expense tells a story.</p>
 
+            <div className="month-navigation">
+              <button
+                type="button"
+                onClick={() => {
+                  const [year, month] = revealMonth.split("-").map(Number);
+                  const previous = new Date(year, month - 2, 1);
+                  setRevealMonth(getMonthKey(previous));
+                }}
+              >
+                ←
+              </button>
+
+              <span>
+                {new Date(`${revealMonth}-01T12:00:00`).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "long",
+                    year: "numeric",
+                  },
+                )}
+              </span>
+
+              <button
+                type="button"
+                disabled={revealMonth >= getMonthKey()}
+                onClick={() => {
+                  const [year, month] = revealMonth.split("-").map(Number);
+                  const next = new Date(year, month, 1);
+                  setRevealMonth(getMonthKey(next));
+                }}
+              >
+                →
+              </button>
+            </div>
+
             <h2>Reports & Insights</h2>
-            <p>Your financial reports will appear here.</p>
+
+            <div className="spending-report">
+              <h3>
+                Where the Money Went —{" "}
+                {new Date(`${revealMonth}-01T12:00:00`).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "long",
+                    year: "numeric",
+                  },
+                )}
+              </h3>
+
+              <p className="spending-total">
+                Total Spent:{" "}
+                <strong>
+                  {totalMonthlySpending.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  })}
+                </strong>
+              </p>
+
+              {Object.keys(spendingByCategory).length === 0 ? (
+                <p>No expenses recorded for this month.</p>
+              ) : (
+                Object.entries(spendingByCategory)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([category, amount]) => (
+                    <div className="spending-report-row" key={category}>
+                      <div className="spending-report-info">
+                        <span>{category}</span>
+                        <span>
+                          {amount.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </span>
+                      </div>
+
+                      <div className="spending-bar">
+                        <div
+                          className="spending-bar-fill"
+                          style={{
+                            width: `${
+                              (amount /
+                                Object.values(spendingByCategory).reduce(
+                                  (total, value) => total + value,
+                                  0,
+                                )) *
+                              100
+                            }%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))
+              )}
+            </div>
+
+            <div className="spending-comparison">
+              <h3>Compared with Previous Month</h3>
+
+              {!previousMonthHasExpenses || !currentMonthHasExpenses ? (
+                <p className="spending-unchanged">Not enough data to compare</p>
+              ) : spendingDifference > 0 ? (
+                <p className="spending-increase">
+                  ↑ ${spendingDifference.toFixed(2)} more
+                </p>
+              ) : spendingDifference < 0 ? (
+                <p className="spending-decrease">
+                  ↓ ${Math.abs(spendingDifference).toFixed(2)} less
+                </p>
+              ) : (
+                <p className="spending-unchanged">No change in spending</p>
+              )}
+
+              <p className="comparison-details">
+                {previousTrendMonth.label}: $
+                {previousTrendMonth.total.toFixed(2)} →{" "}
+                {currentTrendMonth.label}: ${currentTrendMonth.total.toFixed(2)}
+              </p>
+            </div>
+
+            <div className="spending-trends">
+              <h3>Spending Trends</h3>
+              <p>Your spending over the last six months.</p>
+
+              <div className="trends-chart">
+                {monthlySpendingTrends.map((item) => {
+                  const highestSpending = Math.max(
+                    ...monthlySpendingTrends.map((month) => month.total),
+                    1,
+                  );
+
+                  return (
+                    <div className="trend-column" key={item.month}>
+                      <div className="trend-bar-area">
+                        <span className="trend-amount">
+                          {item.total.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                            maximumFractionDigits: 0,
+                          })}
+                        </span>
+
+                        <div
+                          className="trend-bar"
+                          style={{
+                            height: `${(item.total / highestSpending) * 100}%`,
+                          }}
+                          title={`${item.month}: ${item.total.toLocaleString(
+                            "en-US",
+                            {
+                              style: "currency",
+                              currency: "USD",
+                            },
+                          )}`}
+                        />
+                      </div>
+
+                      <span className="trend-month">{item.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="achievement-section">
               <h2>
                 Achievements —{" "}
