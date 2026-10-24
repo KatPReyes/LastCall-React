@@ -1,16 +1,9 @@
 // React hooks used to manage data and perform sidee effect
 import { useState, useEffect } from "react";
 
-// Reusable components that make up the Last Call interface
-import Greeting from "./Greeting";
-import DashboardCard from "./DashboardCard";
-import SpendingChart from "./SpendingChart";
-
-// Form comments used to collect financial information
-import TransactionForm from "./TransactionForm";
-import IncomeForm from "./IncomeForm";
-import SavingsForm from "./SavingsForm";
-import BudgetForm from "./BudgetForm";
+import TheScene from "./TheScene";
+import TheRules from "./TheRules";
+import TheReveal from "./TheReveal";
 
 const expenseCategories = [
   "Groceries",
@@ -219,8 +212,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem("income", String(income));
   }, [income]);
-
-  // Saves the savings goal whenever the target changes
+  // Saves the savings goal whenever it changes
+  useEffect(() => {
+    localStorage.setItem("savingsGoal", String(savingsGoal));
+  }, [savingsGoal]);
+  // Saves the category budgets whenever they change
   useEffect(() => {
     localStorage.setItem("categoryBudgets", JSON.stringify(categoryBudgets));
   }, [categoryBudgets]);
@@ -399,7 +395,7 @@ function App() {
     <div className="app-layout">
       {/* Sidebar the applications navigation links */}
       <nav className="sidebar">
-        <h2>Last Call</h2>
+        <h2>Fatal Interest</h2>
 
         <ul>
           <li>
@@ -445,440 +441,45 @@ function App() {
 
       <main className="main-content">
         {activePage === "scene" && (
-          <>
-            {/* Displays the personalized greeting */}
-            <Greeting />
-
-            <h2 className="section-heading">Your Financial Overview</h2>
-
-            <div className="dashboard-grid">
-              <DashboardCard
-                title="The Supply Drop"
-                description="Total Income"
-                amount={`$${income.toFixed(2)}`}
-              />
-
-              <DashboardCard
-                title="The Damage"
-                description="Total Expenses"
-                amount={`$${totalExpenses.toFixed(2)}`}
-              />
-
-              <DashboardCard
-                title="The Lifeline"
-                description="Remaining Balance"
-                amount={`$${remainingBalance.toFixed(2)}`}
-              />
-
-              <DashboardCard
-                title="The Escape Plan"
-                description="Savings Target"
-                amount={`$${savingsGoal.toFixed(2)}`}
-              />
-            </div>
-
-            {/* Displays expenses and allows transactions to be deleted */}
-            <SpendingChart
-              transactions={transactions}
-              totalSpending={totalExpenses}
-              onDeleteTransaction={deleteTransaction}
-            />
-            {/* Allows user to add income to their total */}
-            <SavingsForm onSetGoal={updateSavingsGoal} />
-            {/* Allows user to add income to their total */}
-            <IncomeForm onAddIncome={addIncome} />
-            {/* Allows user to add new expense transactions */}
-            <TransactionForm
-              onAddTransaction={addTransaction}
-              categories={expenseCategories}
-            />
-          </>
+          <TheScene
+            income={income}
+            totalExpenses={totalExpenses}
+            remainingBalance={remainingBalance}
+            savingsGoal={savingsGoal}
+            transactions={transactions}
+            expenseCategories={expenseCategories}
+            deleteTransaction={deleteTransaction}
+            updateSavingsGoal={updateSavingsGoal}
+            addIncome={addIncome}
+            addTransaction={addTransaction}
+          />
         )}
         {activePage === "rules" && (
-          <section className="page-section">
-            <h1>The Rules</h1>
-            <p>Every scary movie has rules. So does your budget.</p>
-
-            <div className="month-navigation">
-              <button
-                type="button"
-                onClick={() => {
-                  const [year, month] = selectedMonth.split("-").map(Number);
-                  setSelectedMonth(getMonthKey(new Date(year, month - 2, 1)));
-                }}
-              ></button>
-
-              <h3>
-                {new Date(`${selectedMonth}-01T12:00:00`).toLocaleDateString(
-                  "en-US",
-                  { month: "long", year: "numeric" },
-                )}
-              </h3>
-
-              <button
-                type="button"
-                disabled={selectedMonth >= getMonthKey()}
-                onClick={() => {
-                  const [year, month] = selectedMonth.split("-").map(Number);
-                  setSelectedMonth(getMonthKey(new Date(year, month, 1)));
-                }}
-              ></button>
-            </div>
-
-            <div className="survival-report">
-              <h2>Monthly Survival Report</h2>
-              <p>How long can you follow the rules?</p>
-              {Object.keys(displayedBudgets).length === 0 && (
-                <p className="survival-empty-message">
-                  No survival data available for this month.
-                </p>
-              )}
-
-              <div className="survival-stats">
-                <div className="survival-stat safe">
-                  <h3>{survivalStats.safe}</h3>
-                  <p>Safe</p>
-                </div>
-
-                <div className="survival-stat warning">
-                  <h3>{survivalStats.warning}</h3>
-                  <p>Warning</p>
-                </div>
-
-                <div className="survival-stat danger">
-                  <h3>{survivalStats.danger}</h3>
-                  <p>Danger</p>
-                </div>
-              </div>
-            </div>
-
-            {selectedMonth === currentMonth && (
-              <BudgetForm
-                categories={expenseCategories}
-                onSetBudget={setBudget}
-              />
-            )}
-
-            <div className="budget-list">
-              <h2>Your Monthly Budgets</h2>
-
-              {Object.keys(displayedBudgets).length === 0 && (
-                <p className="budget-empty-message">
-                  No rules were written for this month.
-                </p>
-              )}
-              {Object.entries(displayedBudgets)
-                .sort(([categoryA, limitA], [categoryB, limitB]) => {
-                  const percentageA =
-                    (getCategorySpending(categoryA) / Number(limitA)) * 100;
-
-                  const percentageB =
-                    (getCategorySpending(categoryB) / Number(limitB)) * 100;
-
-                  return percentageA - percentageB;
-                })
-                .map(([category, limit]) => {
-                  const spent = getCategorySpending(category);
-                  const remaining = Number(limit) - spent;
-                  const percentage = (spent / Number(limit)) * 100;
-                  const progress = Math.min(percentage, 100);
-                  const budgetStatus =
-                    percentage >= 100
-                      ? "danger"
-                      : percentage >= 80
-                        ? "warning"
-                        : "safe";
-                  const budgetMessage =
-                    budgetStatus === "danger"
-                      ? "YOU BROKE THE RULES."
-                      : budgetStatus === "warning"
-                        ? "The killer is getting closer..."
-                        : "You're following the rules.";
-                  return (
-                    <div className="budget-item" key={category}>
-                      <h3>{category}</h3>
-
-                      <p>Monthly Limit: ${Number(limit).toFixed(2)}</p>
-                      <p>Spent: ${spent.toFixed(2)}</p>
-                      <p>Remaining: ${remaining.toFixed(2)}</p>
-
-                      <div
-                        className={`budget-progress ${budgetStatus}`}
-                        role="progressbar"
-                        aria-label={`${category} budget used`}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-valuenow={Math.round(progress)}
-                      >
-                        <div
-                          className="budget-progress-fill"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-
-                      <p className="budget-percentage">
-                        {percentage.toFixed(0)}% of budget used
-                      </p>
-                      <p className={`budget-message ${budgetStatus}`}>
-                        {budgetMessage}
-                      </p>
-                    </div>
-                  );
-                })}
-            </div>
-          </section>
+          <TheRules
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            displayedBudgets={displayedBudgets}
+            survivalStats={survivalStats}
+            currentMonth={currentMonth}
+            expenseCategories={expenseCategories}
+            setBudget={setBudget}
+            getCategorySpending={getCategorySpending}
+          />
         )}
-
         {activePage === "reveal" && (
-          <section className="page-section">
-            <h1>The Reveal</h1>
-            <p>Every expense tells a story.</p>
-
-            <div className="month-navigation">
-              <button
-                type="button"
-                onClick={() => {
-                  const [year, month] = revealMonth.split("-").map(Number);
-                  const previous = new Date(year, month - 2, 1);
-                  setRevealMonth(getMonthKey(previous));
-                }}
-              >
-                ←
-              </button>
-
-              <span>
-                {new Date(`${revealMonth}-01T12:00:00`).toLocaleDateString(
-                  "en-US",
-                  {
-                    month: "long",
-                    year: "numeric",
-                  },
-                )}
-              </span>
-
-              <button
-                type="button"
-                disabled={revealMonth >= getMonthKey()}
-                onClick={() => {
-                  const [year, month] = revealMonth.split("-").map(Number);
-                  const next = new Date(year, month, 1);
-                  setRevealMonth(getMonthKey(next));
-                }}
-              >
-                →
-              </button>
-            </div>
-
-            <h2>Reports & Insights</h2>
-
-            <div className="spending-report">
-              <h3>
-                Where the Money Went —{" "}
-                {new Date(`${revealMonth}-01T12:00:00`).toLocaleDateString(
-                  "en-US",
-                  {
-                    month: "long",
-                    year: "numeric",
-                  },
-                )}
-              </h3>
-
-              <p className="spending-total">
-                Total Spent:{" "}
-                <strong>
-                  {totalMonthlySpending.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  })}
-                </strong>
-              </p>
-
-              {Object.keys(spendingByCategory).length === 0 ? (
-                <p>No expenses recorded for this month.</p>
-              ) : (
-                Object.entries(spendingByCategory)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([category, amount]) => (
-                    <div className="spending-report-row" key={category}>
-                      <div className="spending-report-info">
-                        <span>{category}</span>
-                        <span>
-                          {amount.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="spending-bar">
-                        <div
-                          className="spending-bar-fill"
-                          style={{
-                            width: `${
-                              (amount /
-                                Object.values(spendingByCategory).reduce(
-                                  (total, value) => total + value,
-                                  0,
-                                )) *
-                              100
-                            }%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))
-              )}
-            </div>
-
-            <div className="spending-comparison">
-              <h3>Compared with Previous Month</h3>
-
-              {!previousMonthHasExpenses || !currentMonthHasExpenses ? (
-                <p className="spending-unchanged">Not enough data to compare</p>
-              ) : spendingDifference > 0 ? (
-                <p className="spending-increase">
-                  ↑ ${spendingDifference.toFixed(2)} more
-                </p>
-              ) : spendingDifference < 0 ? (
-                <p className="spending-decrease">
-                  ↓ ${Math.abs(spendingDifference).toFixed(2)} less
-                </p>
-              ) : (
-                <p className="spending-unchanged">No change in spending</p>
-              )}
-
-              <p className="comparison-details">
-                {previousTrendMonth.label}: $
-                {previousTrendMonth.total.toFixed(2)} →{" "}
-                {currentTrendMonth.label}: ${currentTrendMonth.total.toFixed(2)}
-              </p>
-            </div>
-
-            <div className="spending-trends">
-              <h3>Spending Trends</h3>
-              <p>Your spending over the last six months.</p>
-
-              <div className="trends-chart">
-                {monthlySpendingTrends.map((item) => {
-                  const highestSpending = Math.max(
-                    ...monthlySpendingTrends.map((month) => month.total),
-                    1,
-                  );
-
-                  return (
-                    <div className="trend-column" key={item.month}>
-                      <div className="trend-bar-area">
-                        <span className="trend-amount">
-                          {item.total.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                            maximumFractionDigits: 0,
-                          })}
-                        </span>
-
-                        <div
-                          className="trend-bar"
-                          style={{
-                            height: `${(item.total / highestSpending) * 100}%`,
-                          }}
-                          title={`${item.month}: ${item.total.toLocaleString(
-                            "en-US",
-                            {
-                              style: "currency",
-                              currency: "USD",
-                            },
-                          )}`}
-                        />
-                      </div>
-
-                      <span className="trend-month">{item.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="achievement-section">
-              <h2>
-                Achievements —{" "}
-                {Number(Boolean(unlockedAchievements.followedTheRules)) +
-                  Number(Boolean(unlockedAchievements.firstBlood))}{" "}
-                / 2 Unlocked
-              </h2>
-
-              <div className="achievement-progress">
-                <div
-                  className="achievement-progress-fill"
-                  style={{
-                    width: `${
-                      ((Number(Boolean(unlockedAchievements.followedTheRules)) +
-                        Number(Boolean(unlockedAchievements.firstBlood))) /
-                        2) *
-                      100
-                    }%`,
-                  }}
-                />
-              </div>
-
-              <div
-                className={`achievement-card ${unlockedAchievements.followedTheRules ? "unlocked" : "locked"}`}
-              >
-                <span className="achievement-icon">
-                  {unlockedAchievements.followedTheRules ? "🏆" : "🔒"}
-                </span>
-
-                <div className="achievement-details">
-                  <h3>Followed the Rules</h3>
-
-                  <p>
-                    {unlockedAchievements.followedTheRules
-                      ? "You survived the month without breaking a single budget rule."
-                      : "Complete a month with at least one expense and stay within every budget."}
-                  </p>
-
-                  <span className="achievement-status">
-                    {unlockedAchievements.followedTheRules
-                      ? "ACHIEVED"
-                      : "LOCKED"}
-                  </span>
-
-                  {unlockedAchievements.followedTheRulesMonth && (
-                    <p className="achievement-date">
-                      Unlocked{" "}
-                      {new Date(
-                        `${unlockedAchievements.followedTheRulesMonth}-01T12:00:00`,
-                      ).toLocaleDateString("en-US", {
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div
-                className={`achievement-card ${unlockedAchievements.firstBlood ? "unlocked" : "locked"}`}
-              >
-                <span className="achievement-icon">
-                  {unlockedAchievements.firstBlood ? "🩸" : "🔒"}
-                </span>
-
-                <div className="achievement-details">
-                  <h3>First Blood</h3>
-
-                  <p>
-                    {unlockedAchievements.firstBlood
-                      ? "Every story starts somewhere. You recorded your first expense."
-                      : "Record your first expense to unlock this achievement."}
-                  </p>
-
-                  <span className="achievement-status">
-                    {unlockedAchievements.firstBlood ? "ACHIEVED" : "LOCKED"}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
+          <TheReveal
+            revealMonth={revealMonth}
+            setRevealMonth={setRevealMonth}
+            totalMonthlySpending={totalMonthlySpending}
+            spendingByCategory={spendingByCategory}
+            previousMonthHasExpenses={previousMonthHasExpenses}
+            currentMonthHasExpenses={currentMonthHasExpenses}
+            spendingDifference={spendingDifference}
+            previousTrendMonth={previousTrendMonth}
+            currentTrendMonth={currentTrendMonth}
+            monthlySpendingTrends={monthlySpendingTrends}
+            unlockedAchievements={unlockedAchievements}
+          />
         )}
       </main>
     </div>
