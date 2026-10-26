@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import TheScene from "./TheScene";
 import TheRules from "./TheRules";
 import TheReveal from "./TheReveal";
+import OpeningScene from "./OpeningScene";
 
 const expenseCategories = [
   "Groceries",
@@ -92,6 +93,7 @@ function followedTheRules(budgets, transactions, monthKey) {
 
 // Main component that manages the application's data and dashboard
 function App() {
+  const [showOpening, setShowOpening] = useState(true);
   const [activePage, setActivePage] = useState("scene");
   // Stores expense transactions and loads previously saved transactions
   // If no transactions are saved, start with an empty array
@@ -389,6 +391,9 @@ function App() {
   function updateSavingsGoal(amount) {
     // Replaces the previous goal with the new numeric amount
     setSavingsGoal(Number(amount));
+  }
+  if (showOpening) {
+    return <OpeningScene onEnter={() => setShowOpening(false)} />;
   }
   // Returns the JSX that builds the Last Call interface
   return (

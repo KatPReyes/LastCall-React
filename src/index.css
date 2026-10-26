@@ -909,3 +909,126 @@ body {
   white-space: nowrap;
   border: 0;
 }
+
+
+/* FATAL INTEREST — CINEMATIC OPENING */
+
+.opening-scene {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  box-sizing: border-box;
+  background:
+  url("/fatal-interest-opening.png")
+  center center / cover no-repeat;
+  color: #e4d8c8;
+  text-align: center;
+}
+
+.opening-content {
+  width: 100%;
+  max-width: 800px;
+}
+
+.opening-chapter {
+  color: #b8a18b;
+  font-size: 12px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.opening-title {
+  color: #f1e8de;
+  font-size: clamp(48px, 9vw, 100px);
+  font-weight: 800;
+  letter-spacing: 5px;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
+.opening-tagline {
+  color: #c6c5c1;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin-bottom: 70px;
+}
+
+.opening-dialogue {
+  border-left: 2px solid #a34d55;
+  background: rgba(12, 15, 18, 0.65);
+  padding: 24px 32px;
+  margin: 0 auto 40px;
+  max-width: 500px;
+  text-align: left;
+}
+
+.opening-speaker {
+  color: #d18b91;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.opening-quote {
+  color: #e8e0d8;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.opening-enter {
+  background: #743840;
+  color: #f4eae2;
+  border: 1px solid #a35c63;
+  padding: 17px 42px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.opening-enter:hover {
+  background: #96505a;
+  transform: translateY(-2px);
+}
+
+.opening-enter:focus-visible {
+  outline: 2px solid #e4d8c8;
+  outline-offset: 4px;
+}
+
+
+/* Hide duplicate opening text from the artwork */
+
+.opening-chapter,
+.opening-title,
+.opening-tagline,
+.opening-dialogue {
+  visibility: hidden;
+}
+
+
+
+/* Invisible clickable area over the illustrated button */
+
+.opening-scene {
+  position: relative;
+}
+
+.opening-enter {
+  position: absolute;
+  left: 17.5%;
+  top: 78%;
+  width: 25%;
+  height: 9%;
+  opacity: 0;
+  z-index: 2;
+  cursor: pointer;
+  transform: none;
+}
